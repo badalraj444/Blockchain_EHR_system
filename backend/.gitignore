@@ -1,0 +1,7 @@
+node_modules/
+.env
+*.log
+*.tmp
+*.txt
+*.csv
+next_up
