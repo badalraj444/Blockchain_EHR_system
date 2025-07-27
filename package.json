@@ -1,0 +1,19 @@
+{
+  "name": "blockchain_ehr",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000B\u0000l\u0000o\u0000c\u0000k\u0000c\u0000h\u0000a\u0000i\u0000n\u0000_\u0000E\u0000H\u0000R\u0000_\u0000s\u0000y\u0000s\u0000t\u0000e\u0000m\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badalraj444/Blockchain_EHR_system.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/badalraj444/Blockchain_EHR_system/issues"
+  },
+  "homepage": "https://github.com/badalraj444/Blockchain_EHR_system#readme"
+}
