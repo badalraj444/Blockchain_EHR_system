@@ -1,4 +1,4 @@
-#!/bin/bash -u
+./#!/bin/bash -u
 
 # Copyright 2018 ConsenSys AG.
 #

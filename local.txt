@@ -1,0 +1,5 @@
+todo:
+0 deploy fresh
+1 move all details possible  to env and constant files
+2 split codes more elegantly
+3 understand the use of web block exlporer and other things provided
