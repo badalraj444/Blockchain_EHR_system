@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { Button } from "../components/ui/button";
+import { Button } from "./ui/button";
 import address from "../contracts/config/address";
 import notification from "../contracts/config/NotificationManager.json"
 
