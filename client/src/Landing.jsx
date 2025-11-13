@@ -1,5 +1,7 @@
-import Intro from "./components/Intro";
+import React from "react";
 
+import { Link } from "react-router-dom";
+import Intro from "./components/Intro";
 function Landing() {
   return (
     <div className="min-h-screen w-full flex bg-[#050f0a] text-gray-100">
@@ -21,7 +23,7 @@ function Landing() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold text-green-200 leading-tight">EHR DApp</h2>
+            {/* <h2 className="text-2xl font-semibold text-green-200 leading-tight">EHR DApp</h2> */}
             <p className="text-xs text-gray-400">Secure • Decentralized • Patient-first</p>
           </div>
         </div>
@@ -35,19 +37,23 @@ function Landing() {
         </div>
 
         <div className="w-full mt-4 flex flex-col gap-3">
-          <button
-            className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-[#0ea45f] to-[#0b8f4e] font-medium shadow hover:scale-[1.01] transition-transform"
-          // add onClick handler like: onClick={() => navigate('/auth/login')}
-          >
-            Log in
-          </button>
+          <Link
+  to="/login"
+  className="w-40 px-4 py-3 rounded-xl border border-[#0b3221] 
+             text-green-100 hover:bg-[rgba(255,255,255,0.02)] transition
+             text-center block"
+>
+  Log in
+</Link>
 
-          <button
-            className="w-full px-4 py-3 rounded-xl border border-[#0b3221] text-green-100 hover:bg-[rgba(255,255,255,0.02)] transition"
-          // add onClick handler like: onClick={() => navigate('/auth/signup')}
-          >
-            Sign up
-          </button>
+           <Link
+  to="/signup"
+  className="w-40 px-4 py-3 rounded-xl border border-[#0b3221] 
+             text-green-100 hover:bg-[rgba(255,255,255,0.02)] transition
+             text-center block"
+>
+  Sign up
+</Link>
         </div>
 
         <div className="mt-6 w-full text-xs text-gray-400">

@@ -2,20 +2,31 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import Landing from './Landing';
 import Navbar from "./components/Navbar";
-
+import Signup from "./auth/Signup";  // ← import your signup page
+import Login from "./auth/Login";
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navbar><Landing /></Navbar>} />
-        {/* <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/user-registration" element={<UserRegistration />} />
-          <Route path="/permissions-management" element={<PermissionsManagement />} />
-          <Route path="/data-upload" element={<DataUpload />} />
-          <Route path="/data-retrieval" element={<DataRetrieval />} />
-        </Route> */}
+
+        {/* Landing page */}
+        <Route 
+          path="/" 
+          element={<Navbar><Landing /></Navbar>} 
+        />
+
+        {/* Signup page */}
+        <Route 
+          path="/signup" 
+          element={<Navbar><Signup /></Navbar>} 
+        />
+        {/* Login page */}
+        <Route 
+          path="/login" 
+          element={<Navbar><Login /></Navbar>} 
+        />
+
       </Routes>
     </Router>
   );
