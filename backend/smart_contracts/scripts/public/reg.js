@@ -35,13 +35,18 @@ async function getUserRole(provider, deployedContractAbi, deployedContractAddres
 }
 
 // Helper to register a user
-async function registerUser(provider, wallet, deployedContractAbi, deployedContractAddress, userKey, role) {
-    const contract = new ethers.Contract(deployedContractAddress, deployedContractAbi, provider);
+// Function to register a user
+async function registerUser(provider, wallet, contractAbi, contractAddress, userKey, role) {
+    const contract = new ethers.Contract(contractAddress, contractAbi, provider);
     const contractWithSigner = contract.connect(wallet);
-    const tx = await contractWithSigner.registerUser(userKey, role);
-    await tx.wait();
-    console.log("User registered with role: " + role);
-    return tx;
+
+    try {
+        const tx = await contractWithSigner.registerUser(userKey, role);
+        await tx.wait();
+        console.log(`User ${userKey} registered with role: ${role}`);
+    } catch (error) {
+        console.error(`Error registering user ${userKey}:`, error.message);
+    }
 }
 
 async function main() {
@@ -50,7 +55,7 @@ async function main() {
 
     try {
         
-        const userKey = ethers.encodeBytes32String("UserKeyc1");
+        const userKey = ethers.encodeBytes32String("UserKeyc23");
         const role = "CareProvider"; // Change this to test different roles
         console.log("Registering a user...");
         await registerUser(provider, wallet, contractAbi, contractAddress, userKey, role);
@@ -58,7 +63,7 @@ async function main() {
         console.log("Checking the user's role...");
         await getUserRole(provider, contractAbi, contractAddress, userKey);
     } catch (error) {
-        console.error("An error occurred!");
+        console.error("An error occurred!",error);
     }
 }
 

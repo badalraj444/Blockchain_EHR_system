@@ -1,5 +1,31 @@
 todo:
-0 deploy fresh
+- change logo 
+- change app name in tab
+- strong ui professional look
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0 verify deploys
 1 move all details possible  to env and constant files
 2 split codes more elegantly
-3 understand the use of web block exlporer and other things provided
+3 finish dapp: auth, use cases
+4 understand the use of web block exlporer and other things provided 
+
+
+#### THE MAIN PLAN ##############
+
+1 first understand the documentation with 100% clarity, no confusion. now you understand how the set up works
+2 understand hard hat, etc. how everything is working behind the scenes
+3 start customising to your own 
