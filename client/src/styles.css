@@ -1,4 +1,4 @@
-/* General Page Styling */
+/* 
 body, html {
     height: 100%;
     margin: 0;
@@ -9,7 +9,7 @@ body, html {
     justify-content: center;
   }
   
-  /* Centered Layout */
+
   .container {
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@ body, html {
     padding: 20px;
   }
   
-  /* Dashboard Card */
+ 
   .card {
     background: white;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -31,7 +31,7 @@ body, html {
     border: 1px solid #90caf9;
   }
   
-  /* Title & Subtitle */
+  
   .title {
     font-size: 28px;
     font-weight: bold;
@@ -45,7 +45,7 @@ body, html {
     margin-bottom: 20px;
   }
   
-  /* Wallet Info */
+
   .wallet-info {
     background: #e3f2fd;
     border: 1px solid #90caf9;
@@ -61,7 +61,7 @@ body, html {
     word-break: break-all;
   }
   
-  /* Connect Button */
+
   .connect-button {
     background: #1976d2;
     color: white;
@@ -78,7 +78,7 @@ body, html {
     background: #0d47a1;
   }
   
-  /* Navigation Buttons */
+
   .nav-links {
     display: flex;
     flex-direction: column;
@@ -112,4 +112,4 @@ body, html {
     max-width: 400px;
     justify-content: center;
   }
-  
+   */
