@@ -5,6 +5,7 @@ import cors from "cors";
 import {connectDB} from './lib/db.js';
 
 import authRoutes from './routes/auth.routes.js';
+import path from "path";
 
 const app = express();
 
@@ -15,13 +16,21 @@ app.use(cors({
     credentials: true
 }));
 
+const __dirname = path.resolve();
+
 app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname,"../client","dist")));
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../client","dist","index.html"));
+    });
+}
+
 app.listen(PORT, ()=>{
     console.log('Server listening on port ' + PORT);
-    console.log(process.env.JWT_SECRET_KEY);
     connectDB();
 })
