@@ -1,0 +1,77 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Runtime / build outputs
+dist/
+build/
+out/
+public/build/
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.svelte-kit/
+.vite/
+
+
+
+# Test coverage
+coverage/
+
+# Hardhat / Truffle / Foundry (blockchain)
+artifacts/
+cache/
+typechain/
+build/contracts/
+coverage/
+openzeppelin/
+
+# dotenv (keep .env.example)
+.env
+.env.*.local
+.env.*
+!.env.example
+
+# Secrets / keys
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+*.keystore
+*.secret
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor folders
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Package manager
+.pnp
+.pnp.js
+
+# Misc
+*.tgz
+*.zip
+*.sqlite
+*.sqlite3
+*.db
+
+# Docker override / local docker env
+docker-compose.override.yml
+.env.docker

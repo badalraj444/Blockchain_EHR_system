@@ -1,8 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import useLogout from "../hooks/useLogout";
 
 function Navbar({ children }) {
   const location = useLocation();
+
+  const { logoutMutation } = useLogout();
 
   // routes that should show the logout button
   const showLogout =
@@ -45,7 +48,7 @@ function Navbar({ children }) {
 
           {/* 🔥 Show Logout only on dashboard pages */}
           {showLogout && (
-            <button
+            <button onClick={logoutMutation}
               className="px-4 py-1.5 rounded-md border border-[#0b3b21] 
                          hover:bg-[rgba(255,255,255,0.03)] transition text-gray-200"
             >
