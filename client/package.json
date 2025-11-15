@@ -14,6 +14,7 @@
     "@tanstack/react-query": "^5.90.9",
     "@tanstack/react-query-devtools": "^5.90.2",
     "axios": "^1.13.2",
+    "blockchain_ehr": "file:..",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.5",
     "ipfs-http-client": "^60.0.1",
