@@ -1,13 +1,21 @@
-import React from "react";
+// client/src/components/Navbar.jsx
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
+import useAuthUser from "../hooks/useAuthUser";
+import RegisterToast from "./RegisterToast";
 
 function Navbar({ children }) {
-  const location = useLocation();
+  const { isLoading, authUser } = useAuthUser();
+  const isAuthenticated = Boolean(authUser);
+  const isregisteredOnchain = authUser?.isRegistered2Blockchain;
 
+  const location = useLocation();
   const { logoutMutation } = useLogout();
 
-  // routes that should show the logout button
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  // routes that should show the logout button (dashboard pages)
   const showLogout =
     location.pathname.startsWith("/patient") ||
     location.pathname.startsWith("/careprovider") ||
@@ -15,10 +23,9 @@ function Navbar({ children }) {
 
   return (
     <div className="min-h-screen bg-[#050f0a] text-gray-100 flex flex-col">
-
       <nav
         className="
-          w-full px-8 py-4 border-b border-[#0b3b21] 
+          w-full px-8 py-4 border-b border-[#0b3b21]
           bg-[rgba(255,255,255,0.03)] backdrop-blur-md
           shadow-[0_4px_20px_rgba(0,0,0,0.4)]
           flex items-center justify-between sticky top-0 z-50
@@ -26,8 +33,10 @@ function Navbar({ children }) {
       >
         {/* Left */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br 
-            from-[#0ea45f] to-[#0b8f4e] flex items-center justify-center shadow">
+          <div
+            className="w-10 h-10 rounded-lg bg-gradient-to-br 
+            from-[#0ea45f] to-[#0b8f4e] flex items-center justify-center shadow"
+          >
             <span className="text-white font-bold text-lg">E</span>
           </div>
 
@@ -46,17 +55,32 @@ function Navbar({ children }) {
             </>
           )}
 
-          {/* 🔥 Show Logout only on dashboard pages */}
           {showLogout && (
-            <button onClick={logoutMutation}
-              className="px-4 py-1.5 rounded-md border border-[#0b3b21] 
-                         hover:bg-[rgba(255,255,255,0.03)] transition text-gray-200"
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-3">
+              {/* Show Register CTA only when authenticated AND not registered on-chain */}
+              {!isLoading && isAuthenticated && !isregisteredOnchain && (
+                <button
+                  onClick={() => setShowRegisterModal(true)}
+                  className="px-3 py-1 rounded bg-yellow-400 text-black font-medium hover:brightness-95 transition"
+                >
+                  Register to Chain
+                </button>
+              )}
+
+              {/* Logout button */}
+              <button
+                onClick={logoutMutation}
+                className="px-4 py-1.5 rounded-md border border-[#0b3b21] hover:bg-[rgba(255,255,255,0.03)] transition text-gray-200"
+              >
+                Logout
+              </button>
+            </div>
           )}
         </div>
       </nav>
+
+      {/* Register modal */}
+      <RegisterToast open={showRegisterModal} onClose={() => setShowRegisterModal(false)} authUser={authUser} />
 
       <main className="flex-1">{children}</main>
     </div>

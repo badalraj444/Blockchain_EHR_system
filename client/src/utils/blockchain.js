@@ -9,7 +9,7 @@ import { base64ToHex } from "./convert.js";
 // Import compiled ABIs and addresses (Option A layout)
 import RegistryJson from "../contracts/Registry.json";
 import MetadataJson from "../contracts/Metadata.json";
-import addresses from "../config/addresses.js";
+import addresses from "../contracts/config/address.js";
 
 /**
  * Create ethers.Contract
@@ -68,9 +68,13 @@ export async function queryMetadata({ metadataAddress = addresses.metadata, meta
   return result;
 }
 
+
+
+
 export default {
   getContract,
   registerUser,
   addEHRdata,
   queryMetadata,
+  
 };

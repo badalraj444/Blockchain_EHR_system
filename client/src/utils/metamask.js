@@ -91,6 +91,36 @@ export function onChainChange(cb) {
   }
 }
 
+// add to client/src/utils/metamask.js
+
+/**
+ * Check if MetaMask (window.ethereum) is connected to the expected chainId.
+ * - expectedChainId (number) optional. If omitted, reads import.meta.env.VITE_CHAIN_ID.
+ * Returns: { ok: boolean, actual: number, expected: number|null }
+ */
+export async function isNetworkCorrect(expectedChainId) {
+  if (typeof window === "undefined" || typeof window.ethereum === "undefined") {
+    return { ok: false, actual: null, expected: expectedChainId };
+  }
+
+  const expected =
+    expectedChainId ??
+    (import.meta.env.VITE_CHAIN_ID ? Number(import.meta.env.VITE_CHAIN_ID) : null);
+
+  let actualNum = null;
+
+  // Always prefer MetaMask RPC
+  const chainIdHex = await window.ethereum.request({ method: "eth_chainId" });
+
+  // "0x539" → 1337
+  actualNum = parseInt(chainIdHex, 16);
+
+  const ok = expected ? actualNum === Number(expected) : true;
+
+  return { ok, actual: actualNum, expected };
+}
+
+
 export default {
   isMetaMaskInstalled,
   connectMetaMask,
@@ -102,4 +132,5 @@ export default {
   addEHRdataTx,
   onAccountChange,
   onChainChange,
+  isNetworkCorrect,
 };
