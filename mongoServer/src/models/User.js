@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema({
   hashedkey : {
     type : String,
     required : true,
-}
+},
+ isRegistered2Blockchain: {
+    type: Boolean,
+    default: false,
+  },
 },
 
 {timestamps : true}

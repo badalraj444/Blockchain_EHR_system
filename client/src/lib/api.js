@@ -24,3 +24,10 @@ export const getAuthUser = async () => {
   }
 };
 
+export const updateUserRegistration = async (userId, isRegistered) => {
+  const response = await axiosInstance.patch(
+    `/blockchain/users/${userId}/isregistered`,
+    { isRegistered }
+  );
+  return response.data;  // { success, user }
+};

@@ -6,6 +6,7 @@ import { connectDB } from "./lib/db.js";
 
 import path from "path";
 import authRoutes from "./routes/auth.routes.js";
+import blockchainRoutes from "./routes/blockchain.routes.js";
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/blockchain", blockchainRoutes);
+
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client", "dist")));

@@ -10,8 +10,6 @@ import Researcher from "./users/Researcher";
 import { Toaster } from "react-hot-toast";
 import useAuthUser  from "./hooks/useAuthUser";
 
-import EncryptDecryptTest from "./components/EncryptDecryptTest";
-import KeyGenerator from "./components/KeyGenerator";
 
 
 export default function App() {
@@ -42,9 +40,6 @@ export default function App() {
         <Route path="/patient" element={isAuthenticated && role === "Patient" ? <Navbar><Patient /></Navbar> : <Navigate to="/login" />} />
         <Route path="/careprovider" element={isAuthenticated && role === "CareProvider" ? <Navbar><CareProvider /></Navbar> : <Navigate to="/login" />} />
         <Route path="/researcher" element={isAuthenticated && role === "Researcher" ? <Navbar><Researcher /></Navbar> : <Navigate to="/login" />} />
-
-        <Route path="/keys" element={<Navbar><KeyGenerator /></Navbar>} />
-        <Route path="/crypto-test" element={<Navbar><EncryptDecryptTest /></Navbar>} />
 
       </Routes>
       {/* <Toaster /> */}
