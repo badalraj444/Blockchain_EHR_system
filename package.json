@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/badalraj444/Blockchain_EHR_system/issues"
   },
-  "homepage": "https://github.com/badalraj444/Blockchain_EHR_system#readme"
+  "homepage": "https://github.com/badalraj444/Blockchain_EHR_system#readme",
+  "dependencies": {
+    "ethers": "^6.15.0",
+    "ipfs-http-client": "^60.0.1",
+    "node-forge": "^1.3.1"
+  }
 }

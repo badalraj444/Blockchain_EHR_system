@@ -10,6 +10,9 @@ contract Registry {
     }
 
     mapping(bytes32 => User) public users;
+    mapping(bytes32 => address) public ownerOf; // owner address for a user hash
+
+    event UserRegistered(bytes32 indexed key, address indexed owner, Role role);
 
     function checkUser(bytes32 pub_key) public view returns (bool) {
         return users[pub_key].isRegistered;
@@ -19,21 +22,30 @@ contract Registry {
         require(!checkUser(_key), "User already registered!");
 
         bytes32 roleHash = keccak256(abi.encodePacked(_role));
-        if (roleHash == keccak256("Patient")) {
-            users[_key] = User({role: Role.Patient, isRegistered: true});
-        } else if (roleHash == keccak256("CareProvider")) {
-            users[_key] = User({role: Role.CareProvider, isRegistered: true});
-        } else if (roleHash == keccak256("Researcher")) {
-            users[_key] = User({role: Role.Researcher, isRegistered: true});
-        } else if (roleHash == keccak256("Regulator")) {
-            users[_key] = User({role: Role.Regulator, isRegistered: true});
+        Role role;
+        if (roleHash == keccak256(abi.encodePacked("Patient"))) {
+            role = Role.Patient;
+        } else if (roleHash == keccak256(abi.encodePacked("CareProvider"))) {
+            role = Role.CareProvider;
+        } else if (roleHash == keccak256(abi.encodePacked("Researcher"))) {
+            role = Role.Researcher;
+        } else if (roleHash == keccak256(abi.encodePacked("Regulator"))) {
+            role = Role.Regulator;
         } else {
             revert("Invalid role!");
         }
+
+        users[_key] = User({ role: role, isRegistered: true });
+        ownerOf[_key] = msg.sender;
+        emit UserRegistered(_key, msg.sender, role);
     }
 
     function getUserRole(bytes32 pub_key) public view returns (Role) {
         require(users[pub_key].isRegistered, "User not registered");
         return users[pub_key].role;
+    }
+
+    function getOwner(bytes32 pub_key) public view returns (address) {
+        return ownerOf[pub_key];
     }
 }

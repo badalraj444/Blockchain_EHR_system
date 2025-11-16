@@ -15,7 +15,7 @@ const getContractData = (contractName) => {
         abi: contractJson.abi,
         bytecode: contractJson.evm.bytecode.object
     };
-};
+}
 
 // Helper function to deploy contract
 async function createContract(provider, wallet, contractAbi, contractBytecode, constructorArgs = []) {
@@ -26,21 +26,25 @@ async function createContract(provider, wallet, contractAbi, contractBytecode, c
 }
 
 // Function to update contractAddresses.js
-function updateContractAddresses(key, contractAddress) {
+function updateContractAddresses(key, address) {
     const filePath = path.resolve(__dirname, "..", "address.js");
+    // Read existing file or create new if not found
     let existingData = {};
     if (fs.existsSync(filePath)) {
         existingData = require(filePath);
     }
-    existingData[key] = contractAddress;
-    
-    const formattedData = Object.entries(existingData)
+    // Update the object with the new address
+    existingData[key] = address;
+        // Manually format the JS object to avoid double quotes around keys
+        const formattedData = Object.entries(existingData)
         .map(([k, v]) => `    ${k}: "${v}"`)
         .join(",\n");
-    
+    // Create module.exports content
     const fileContent = `module.exports = {\n${formattedData}\n};\n`;
+    // Write the formatted content to the file
     fs.writeFileSync(filePath, fileContent);
     console.log(`Updated ${key} address in address.js`);
+
 }
 
 async function main() {
@@ -48,16 +52,19 @@ async function main() {
     const wallet = new ethers.Wallet(accountPrivateKey, provider);
 
     try {
-        const registryAddress = address.registry; 
-        const notificationManagerAddress = address.notification; 
-        const metadataAddress = address.metadata;
+        const registryAddress = address.registry; // Insert the deployed Registry contract address here
+       
+        // Deploy the Permission contract with Registry addresses
+        const { abi: metadataAbi, bytecode: metadatBytecode } = getContractData('Metadata');
+        const metadataContract = await createContract(provider, wallet, metadataAbi, metadatBytecode, [registryAddress]);
+        const metadataAddress = await metadataContract.getAddress();
+        console.log("Metadata contract deployed at:", metadataAddress);
+        updateContractAddresses("metadata",metadataAddress);
+    
 
-        // Deploy the Permission contract with Registry, NotificationManager, and Metadata addresses
-        const { abi: permissionAbi, bytecode: permissionBytecode } = getContractData('Permission');
-        const permissionContract = await createContract(provider, wallet, permissionAbi, permissionBytecode, [registryAddress, notificationManagerAddress, metadataAddress]);
-        const permissionAddress = await permissionContract.getAddress();
-        console.log("Permission contract deployed at:", permissionAddress);
-        updateContractAddresses("permission", permissionAddress);
+
+    
+
     } catch (error) {
         console.error("An error occurred:", error);
     }

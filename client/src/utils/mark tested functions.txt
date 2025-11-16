@@ -1,0 +1,17 @@
+=== client/src/utils/crypto/keys.js ===
+
+exportPrivateKeyToFile(privateKeyPem, filename)      // -> triggers browser download
+importPrivateKeyFromFile(file)                       // -> Promise<string> PEM
+
+
+
+=== client/src/utils/fileHelper.js ===
+readFileAsText(file)                                  // -> Promise<string>
+downloadTextFile(filename, content)                  // -> triggers browser download
+
+=== client/src/utils/PARAM_DEFINITIONS.js ===
+validateParam(name, value)                           // -> { ok: true } | { ok: false, error }
+
+
+
+
