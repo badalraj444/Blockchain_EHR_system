@@ -1,6 +1,23 @@
 {
   "API": {
-    "HTTPHeaders": {}
+    "HTTPHeaders": {
+      "Access-Control-Allow-Headers": [
+        "X-Requested-With",
+        "Range",
+        "User-Agent",
+        "Content-Type",
+        "Authorization"
+      ],
+      "Access-Control-Allow-Methods": [
+        "PUT",
+        "POST",
+        "GET",
+        "HEAD"
+      ],
+      "Access-Control-Allow-Origin": [
+        "http://localhost:5173"
+      ]
+    }
   },
   "Addresses": {
     "API": "/ip4/0.0.0.0/tcp/5001",

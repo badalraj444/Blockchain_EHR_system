@@ -6,7 +6,7 @@
  */
 
 /* ============================
-   1.  CRYPTO / RSA / KEYPAIR
+   1.  src/utils/crypto/keys.js
    ============================ */
 export const RSA_KEY_FUNCTIONS = [
   "generateRsaKeyPair",
@@ -16,7 +16,7 @@ export const RSA_KEY_FUNCTIONS = [
 ];
 
 /* ============================
-   2.  CRYPTO / SYMMETRIC AES
+   2.  src/utils/crypto/symmetric.js
    ============================ */
 export const AES_FUNCTIONS = [
   "generateAesKeyBase64",
@@ -27,7 +27,7 @@ export const AES_FUNCTIONS = [
 ];
 
 /* ============================
-   3.  DATA CONVERSION HELPERS
+   3.  src/utils/convert.js
    ============================ */
 export const CONVERSION_FUNCTIONS = [
   "hexToBase64",
@@ -38,7 +38,7 @@ export const CONVERSION_FUNCTIONS = [
 ];
 
 /* ============================
-   4.  IPFS HELPERS
+   4.  src/utils/ipfs.js
    ============================ */
 export const IPFS_FUNCTIONS = [
   "combinePayloadForIpfs",
@@ -52,7 +52,7 @@ export const IPFS_FUNCTIONS = [
 ];
 
 /* ============================
-   5.  BLOCKCHAIN HELPERS
+   5.  src/utils/blockchain.js
    ============================ */
 export const BLOCKCHAIN_FUNCTIONS = [
   "getContract",
@@ -62,7 +62,7 @@ export const BLOCKCHAIN_FUNCTIONS = [
 ];
 
 /* ============================
-   6.  FILE HELPERS
+   6.  src/utils/file.js
    ============================ */
 export const FILE_HELPERS = ["readFileAsText", "downloadTextFile"];
 

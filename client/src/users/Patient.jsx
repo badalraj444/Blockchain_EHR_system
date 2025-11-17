@@ -1,8 +1,29 @@
-import React from "react";
+// src/users/Patient.jsx
+import React, { useState } from "react";
+import useAuthUser from "../hooks/useAuthUser";
+import UploadDataModal from "../components/UploadDataModal";
+import ViewRecordsModal from "../components/ViewRecordsModal";
 
 function Patient() {
+  const { isLoading, authUser } = useAuthUser();
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#050f0a] text-gray-100 p-8 flex justify-center">
+      {/* Upload modal */}
+      <UploadDataModal
+        open={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        authUser={authUser}
+      />
+
+      {/* View modal */}
+      <ViewRecordsModal
+        open={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        authUser={authUser}
+      />
 
       {/* CARD */}
       <div
@@ -22,14 +43,16 @@ function Patient() {
 
         {/* Feature Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
           {/* Upload Data */}
           <div className="p-6 bg-[rgba(255,255,255,0.02)] border border-[#0b3221] rounded-xl hover:bg-[rgba(255,255,255,0.04)] transition">
             <h2 className="text-xl text-green-200 font-semibold mb-2">Upload Data</h2>
             <p className="text-sm text-gray-300 mb-4 leading-relaxed">
               Securely upload encrypted medical records to your personal vault.
             </p>
-            <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#0ea45f] to-[#0b8f4e] text-sm shadow hover:scale-[1.01] transition">
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#0ea45f] to-[#0b8f4e] text-sm shadow hover:scale-[1.01] transition"
+            >
               Upload Now
             </button>
           </div>
@@ -40,7 +63,10 @@ function Patient() {
             <p className="text-sm text-gray-300 mb-4 leading-relaxed">
               Browse all your stored health records securely and quickly.
             </p>
-            <button className="px-4 py-2 rounded-lg border border-[#0b3221] text-sm hover:bg-[rgba(255,255,255,0.02)] transition">
+            <button
+              onClick={() => setShowViewModal(true)}
+              className="px-4 py-2 rounded-lg border border-[#0b3221] text-sm hover:bg-[rgba(255,255,255,0.02)] transition"
+            >
               View Records
             </button>
           </div>
@@ -73,10 +99,3 @@ function Patient() {
 }
 
 export default Patient;
-
-
-
-// 1. he can upload his data
-// 2. view his data
-// 3. manage permissions 
-// 4. check notifications
