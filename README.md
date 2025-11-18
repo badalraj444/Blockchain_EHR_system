@@ -1,96 +1,179 @@
-# Blockchain_EHR_system
+# 🏥 Blockchain-Based Electronic Health Record (EHR) Management System
 
-A **Blockchain-based Electronic Health Record (EHR) Management System** leveraging **Hyperledger Besu** for secure and decentralized storage of medical records and **React + Vite** for an interactive client-side interface. The system ensures **data integrity, privacy, and transparency** in healthcare record management.
+A **fully decentralized, cryptographically secure EHR management platform** built using:
 
----
+- **Hyperledger Besu** (Private Ethereum Network)
+- **Solidity Smart Contracts**
+- **Hybrid RSA–AES Client-Side Encryption**
+- **IPFS (InterPlanetary File System)** for encrypted storage
+- **React + Vite (Frontend UI)**
+- **Node.js + Express + MongoDB (Authentication Backend)**
+- **MetaMask for on-chain identity verification**
 
-## 🚀 Features
-
-- **Decentralized EHR Management** using **Hyperledger Besu**.
-- **Secure & Transparent Data Storage** – immutable blockchain ledger.
-- **Smart Contract-based Access Control** for patient data sharing.
-- **User-friendly React Frontend** with Vite for fast development.
-- **Docker-based Local Deployment** for quick setup.
-- **Benchmarking Support** using **Hyperledger Caliper**.
-
----
-
-## 📌 Project Structure
-
-```
-Blockchain_EHR_system/
-│
-├── backend/           # Hyperledger Besu blockchain network setup & scripts
-│   ├── config/        # Besu network configuration & genesis files
-│   ├── chainlens/     # Nginx configs for blockchain explorer
-│   ├── run.sh         # Script to start the blockchain network
-│   ├── docker-compose.yml
-│   └── ...
-│
-├── client/            # React + Vite frontend for the EHR DApp
-│   ├── src/components # UI components (DataUpload, DataRetrieval, etc.)
-│   ├── package.json
-│   └── ...
-│
-└── README.md          # (You are here)
-```
+This system demonstrates how blockchain, cryptography, and decentralized storage can be combined to build a **secure, private, tamper-proof healthcare record management platform**.
 
 ---
 
-## 🛠️ Technology Stack
+# 🌐 Live Demo
 
-- **Blockchain:** [Hyperledger Besu](https://besu.hyperledger.org/)
-- **Frontend:** React (Vite, JSX, TailwindCSS)
-- **Smart Contracts:** Solidity (via Node.js & npm)
-- **Containerization:** Docker & Docker Compose
-- **Benchmarking:** Hyperledger Caliper
+🚀 **Frontend (Render):**  
+https://blockchain-ehr-system1.onrender.com/
 
 ---
 
-## ⚙️ Installation & Setup
+# 📌 Key Features
 
-### ✅ Prerequisites
+### 🔐 1. Secure User Authentication
 
-Ensure you have the following installed:
+- JWT-based login/signup
+- Password hashing using bcrypt
+- MongoDB storage of user credentials
+- Client-side RSA keypair generation (never stored on server)
 
-- **Docker & Docker Compose**
-- **Node.js & npm**
-- **Git**
+### 🔑 2. Hybrid Cryptographic Architecture
 
-### 1️⃣ Clone the Repository
+- AES-256 for actual file encryption
+- RSA-OAEP for securing AES key
+- Keccak256 hashing → bytes32 blockchain identity
+- Private keys never leave the browser
+
+### 🧾 3. Decentralized Metadata Storage
+
+- All file metadata (CID, encrypted AES key, dataType) stored immutably on blockchain
+- Smart contracts ensure owner-only access
+
+### 📦 4. Encrypted File Storage on IPFS
+
+- Browser uploads encrypted JSON payload
+- IPFS returns CID
+- CID stored on blockchain
+
+### 🧭 5. Patient-Centric Access
+
+- Patients can upload, view, decrypt, and download their medical files
+- Researchers and Care Providers follow similar flows
+
+### 🎨 6. Beautiful UI
+
+- Built using React + TailwindCSS
+- Includes:
+  - Homepage
+  - Authentication (Signup + Login)
+  - Patient Dashboard
+  - Upload Modal
+  - View Records Modal
+
+---
+
+# 💻 Technology Stack
+
+### Blockchain
+
+- Hyperledger Besu
+- Solidity
+- Ethers.js
+- MetaMask
+
+### Cryptography
+
+- RSA keypair generation (Forge)
+- AES-256-CBC encryption
+- RSA-OAEP key wrapping
+- Keccak256 hashing
+
+### Storage
+
+- IPFS distributed storage
+- MongoDB for user accounts
+
+### Frontend
+
+- React
+- Vite
+- TailwindCSS
+- TanStack React Query
+- Toastify
+
+### Backend
+
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT Authentication
+
+---
+
+# 🔐 Cryptographic Workflow (Summary)
+
+1. RSA keypair generated client-side
+2. Public key → Keccak256 → bytes32 userHash
+3. Upload workflow:
+   - AES key generated
+   - File encrypted with AES
+   - AES key encrypted using RSA-OAEP
+   - Payload stored on IPFS
+   - CID + encrypted key stored on blockchain
+4. View workflow:
+   - Metadata fetched from blockchain
+   - Payload fetched from IPFS
+   - Private key decrypts AES key
+   - AES decrypts medical file
+
+---
+
+# 🛠️ Installation Guide
+
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/<your-username>/Blockchain_EHR_system.git
 cd Blockchain_EHR_system
 ```
 
-### 2️⃣ Start the Blockchain Network
+### 2. Start Backend
 
 ```bash
 cd backend
+npm install
+npm start
+```
+
+### 3. Start Besu Blockchain
+
+```bash
+cd smart_contracts
 ./run.sh
 ```
 
-Verify running containers:
+### 4. Start Frontend
 
 ```bash
-docker ps
-```
-
-### 3️⃣ Run the Client Application
-
-```bash
-cd ../client
+cd client
 npm install
 npm run dev
 ```
 
-Access the app at: **http://localhost:5173**
+---
+
+# 📸 Snapshots
+
+## Landing page
+
+![Homepage](/snaps/home.png)
+
+## Authentication
+
+![Login](./snaps/login.png)
+
+## Upload Data
+
+![Upload Data](./snaps/upload.png)
+
+## View Records
+
+![View Records](./snaps/view.png)
 
 ---
 
----
+# 📜 License
 
-## 📜 License
-
-This project is licensed under the MIT License – see the LICENSE file for details.
+MIT License.
