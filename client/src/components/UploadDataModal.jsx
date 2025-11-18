@@ -1,6 +1,7 @@
 // client/src/components/UploadDataModal.jsx
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import metamask from "../utils/metamask";
@@ -12,7 +13,7 @@ import { deterministicStringify } from "../utils/convert.js";
 import { uploadToIPFS } from "../utils/ipfs.js";
 
 export default function UploadDataModal({ open, onClose, authUser }) {
-  const [busyStep, setBusyStep] = useState(null); // null | step string
+  const [busyStep, setBusyStep] = useState(null); // null | step string | 'error' | 'done'
   const [fileName, setFileName] = useState("");
   const [dataType, setDataType] = useState("general");
   const [progressLog, setProgressLog] = useState([]);
@@ -26,6 +27,29 @@ export default function UploadDataModal({ open, onClose, authUser }) {
   }
 
   if (!open) return null;
+
+  const explorerTxUrlTemplate = import.meta.env.VITE_EXPLORER_TX_URL || null;
+  const txLink = txHash && explorerTxUrlTemplate ? explorerTxUrlTemplate.replace("{tx}", txHash) : null;
+
+  const steps = ["reading", "encrypting", "packaging", "ipfs", "onchain", "done"];
+  const currentStepIndex = busyStep ? Math.max(0, steps.indexOf(busyStep)) : -1;
+  const busy = busyStep && busyStep !== "done" && busyStep !== "error";
+
+  function StepDot({ idx, active, label }) {
+    return (
+      <div className="flex items-center gap-3">
+        <div
+          className={`w-3 h-3 rounded-full flex-shrink-0 ${
+            active
+              ? "bg-[#0ea45f] shadow-[0_6px_14px_rgba(14,164,95,0.18)]"
+              : "bg-[rgba(255,255,255,0.03)] border border-[#0b3b21]"
+          }`}
+          aria-hidden
+        />
+        <div className={`text-xs ${active ? "text-green-100 font-medium" : "text-gray-400"}`}>{label}</div>
+      </div>
+    );
+  }
 
   function readFileAsBase64(file) {
     return new Promise((resolve, reject) => {
@@ -77,7 +101,7 @@ export default function UploadDataModal({ open, onClose, authUser }) {
       setBusyStep("reading");
       log("Reading file and converting to base64...");
       const base64Content = await readFileAsBase64(file);
-      log(`Read file "${file.name}" (${(file.size / 1024).toFixed(1)} KB)`);
+      log(`Read file \"${file.name}\" (${(file.size / 1024).toFixed(1)} KB)`);
 
       // 2) encrypt using user's public PEM
       setBusyStep("encrypting");
@@ -142,9 +166,7 @@ export default function UploadDataModal({ open, onClose, authUser }) {
       const receipt = result?.receipt;
       const ok =
         receipt &&
-        (receipt.status === 1 ||
-          String(receipt.status) === "1" ||
-          receipt.status === true);
+        (receipt.status === 1 || String(receipt.status) === "1" || receipt.status === true);
       if (!ok) {
         throw new Error("On-chain transaction failed (receipt status not OK).");
       }
@@ -153,43 +175,94 @@ export default function UploadDataModal({ open, onClose, authUser }) {
       log("On-chain registration of metadata confirmed.");
       toast.success("Data uploaded and metadata stored on chain.");
       qc.invalidateQueries(["authUser"]);
+
+      // keep 'done' visible briefly for UI feedback then clear
+      setTimeout(() => setBusyStep(null), 900);
     } catch (err) {
       console.error("Upload failed:", err);
       toast.error(err?.message || "Upload failed");
       log(`Error: ${err?.message || String(err)}`);
       setBusyStep("error");
-    } finally {
-      setBusyStep(null);
+      // leave the error state visible so the user can see logs; user can then cancel/close
     }
   }
 
+  // derive last status message from logs
+  const statusMsg = progressLog.length > 0 ? progressLog[progressLog.length - 1] : "Waiting for action...";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={() => !busyStep && onClose && onClose()} />
+      {/* Backdrop — clicking disabled while busy */}
+      <div
+        className={`absolute inset-0 ${busy ? "bg-black/80" : "bg-black/60"} transition`}
+        onClick={() => !busy && onClose && onClose()}
+      />
 
       <div className="relative w-full max-w-2xl p-6 bg-[#07110a] border border-[#0b3b21] rounded-lg text-gray-100">
-        <h3 className="text-lg font-semibold mb-2">Upload Data</h3>
+        {/* Top progress bar when busy */}
+        {busy && (
+          <div className="absolute left-0 top-0 w-full h-1 rounded-t-lg overflow-hidden" aria-hidden>
+            <div
+              className="h-full animate-[progress_2.2s_linear_infinite]"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(14,164,95,0.12), rgba(166,244,197,0.9), rgba(11,143,78,0.18))",
+                width: "40%",
+              }}
+            />
+            <style>{`@keyframes progress { 0% { transform: translateX(-10%); } 50% { transform: translateX(30%); } 100% { transform: translateX(110%); } }`}</style>
+          </div>
+        )}
+
+        <h3 className="text-lg font-semibold mb-2 flex items-center justify-between">
+          <span>Upload Data</span>
+          <span className={`text-xs px-2 py-0.5 rounded ${busy ? "bg-[rgba(14,164,95,0.12)] text-green-100" : "bg-[rgba(255,255,255,0.03)] text-gray-300"}`}>
+            {busy ? "Processing" : txHash ? "Done" : "Ready"}
+          </span>
+        </h3>
 
         <p className="text-sm mb-3">This will encrypt your file and store it on IPFS, then write metadata on-chain.</p>
 
         <form onSubmit={handleUploadConfirm} className="space-y-3">
           <div>
             <label className="text-xs text-gray-300">File</label>
-            <input id="upload-file-input" type="file" onChange={handleFileChange} className="block w-full mt-1" />
+            <input id="upload-file-input" type="file" onChange={handleFileChange} className="block w-full mt-1" disabled={!!busyStep} />
             {fileName && <div className="text-xs text-gray-400 mt-1">{fileName}</div>}
           </div>
 
           <div>
             <label className="text-xs text-gray-300">Data type</label>
-            <input value={dataType} onChange={(e) => setDataType(e.target.value)} className="w-full mt-1 p-2 rounded bg-[#0b110b] border border-[#0b3221]" />
+            <input value={dataType} onChange={(e) => setDataType(e.target.value)} className="w-full mt-1 p-2 rounded bg-[#0b110b] border border-[#0b3221]" disabled={!!busyStep} />
+          </div>
+
+          {/* Progress steps (compact) */}
+          <div className="mb-3">
+            <div className="flex items-center justify-between gap-4 text-left">
+              <StepDot idx={0} active={currentStepIndex >= 0} label="Reading" />
+              <div className="flex-1 border-t border-[#0b3b21] mx-2" />
+              <StepDot idx={1} active={currentStepIndex >= 1} label="Encrypting" />
+              <div className="flex-1 border-t border-[#0b3b21] mx-2" />
+              <StepDot idx={2} active={currentStepIndex >= 2} label="Packaging" />
+              <div className="flex-1 border-t border-[#0b3b21] mx-2" />
+              <StepDot idx={3} active={currentStepIndex >= 3} label="IPFS" />
+              <div className="flex-1 border-t border-[#0b3b21] mx-2" />
+              <StepDot idx={4} active={currentStepIndex >= 4} label="On-chain" />
+            </div>
           </div>
 
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => onClose && onClose()} disabled={!!busyStep} className="px-3 py-1 rounded bg-gray-700">
+            <button type="button" onClick={() => onClose && onClose()} disabled={busy} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition disabled:opacity-50">
               Cancel
             </button>
-            <button type="submit" disabled={!!busyStep} className="px-4 py-1 rounded bg-green-600 text-black">
-              {busyStep ? "Processing..." : "Confirm & Upload"}
+            <button type="submit" disabled={busy} className="px-4 py-1 rounded bg-gradient-to-br from-[#0ea45f] to-[#0b8f4e] text-black font-medium disabled:opacity-60 inline-flex items-center gap-3">
+              {busy && (
+                <svg width="16" height="16" viewBox="0 0 50 50" className="animate-spin" aria-hidden>
+                  <circle cx="25" cy="25" r="18" stroke="rgba(0,0,0,0.12)" strokeWidth="4" fill="none" />
+                  <path d="M43 25c0-9.665-7.835-17.5-17.5-17.5" stroke="#06270f" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              )}
+
+              <span>{busy ? "Processing..." : "Confirm & Upload"}</span>
             </button>
           </div>
         </form>
@@ -198,20 +271,15 @@ export default function UploadDataModal({ open, onClose, authUser }) {
           <div className="font-medium text-sm mb-2">Progress</div>
           {progressLog.length === 0 && <div className="text-xs text-gray-400">Waiting for action...</div>}
           {progressLog.map((line, i) => (
-            <div key={i} className="text-xs break-words">
-              {line}
-            </div>
+            <div key={i} className="text-xs break-words">{line}</div>
           ))}
           {cid && (
-            <div className="mt-2 text-xs">
-              IPFS CID: <span className="text-green-300 break-all">{cid}</span>
-            </div>
+            <div className="mt-2 text-xs">IPFS CID: <span className="text-green-300 break-all">{cid}</span></div>
           )}
           {txHash && (
-            <div className="mt-2 text-xs">
-              Tx: <span className="text-green-300 break-all">{txHash}</span>
-            </div>
+            <div className="mt-2 text-xs">Tx: {txLink ? (<a href={txLink} target="_blank" rel="noreferrer" className="text-green-300 underline">{txHash}</a>) : (<span className="text-green-300 break-all">{txHash}</span>)}</div>
           )}
+          <div className="mt-2 text-xs text-gray-400">Status: <span className="text-sm">{statusMsg}</span></div>
         </div>
       </div>
     </div>

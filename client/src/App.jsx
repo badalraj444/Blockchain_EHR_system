@@ -9,6 +9,7 @@ import CareProvider from "./users/CareProvider";
 import Researcher from "./users/Researcher";
 import { Toaster } from "react-hot-toast";
 import useAuthUser  from "./hooks/useAuthUser";
+import Loading from "./components/Loading"; // <-- new import
 
 
 
@@ -17,6 +18,10 @@ export default function App() {
   const isAuthenticated = Boolean(authUser);
   const role = authUser?.role;
   //todo : add loading state 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div>
       <Routes>
@@ -42,7 +47,19 @@ export default function App() {
         <Route path="/researcher" element={isAuthenticated && role === "Researcher" ? <Navbar><Researcher /></Navbar> : <Navigate to="/login" />} />
 
       </Routes>
-      {/* <Toaster /> */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          // Default options for all toasts
+          duration: 5000,
+          style: {
+            background: "#07110a",
+            color: "#f1f5f2",
+            border: "1px solid #0b3b21",
+            fontFamily: "'Inter', 'Poppins', 'Roboto', sans-serif",
+          },
+        }}
+      />
     </div>
   );
 }

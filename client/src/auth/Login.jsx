@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../lib/api"; // make sure this exists and sends { email, password }
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
